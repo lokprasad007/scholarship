@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, Fingerprint, Sparkles, User, Mail, Phone, ChevronLeft, GraduationCap, MapPin, IndianRupee } from 'lucide-react';
+import { ArrowRight, Fingerprint, Sparkles, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { auth, db } from '../lib/firebase';
@@ -86,6 +86,7 @@ export function Auth({ onComplete }: AuthProps) {
         userId: user!.uid,
         name: formData.name,
         email: formData.email || `temp_${user!.uid}@pulse.protocol`,
+        phone: formData.phone,
         age: formData.age,
         location: formData.location,
         qualification: formData.qualification,
@@ -157,7 +158,7 @@ export function Auth({ onComplete }: AuthProps) {
               <div className="space-y-6 md:space-y-8">
                 <div className="flex items-center gap-4 md:hidden mb-8">
                   <div className="w-10 h-10 bg-brand-lime rounded-xl flex items-center justify-center text-black">
-                    <GraduationCap className="w-5 h-5" />
+                    <Sparkles className="w-5 h-5" />
                   </div>
                   <span className="text-lg font-black text-white italic">SCHOLARPULSE</span>
                 </div>
@@ -225,10 +226,9 @@ export function Auth({ onComplete }: AuthProps) {
               <div className="space-y-2 md:col-span-2">
                 <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Full Legal Identity</Label>
                 <div className="relative group">
-                  <User className="absolute left-7 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-500 group-focus-within:text-brand-lime transition-all" />
                   <input 
                     placeholder="ENTER NAME"
-                    className="glass-input w-full pl-20 text-xl tracking-tight"
+                    className="glass-input w-full px-8 text-xl tracking-tight"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
@@ -238,10 +238,9 @@ export function Auth({ onComplete }: AuthProps) {
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Mobile String</Label>
                 <div className="relative group">
-                  <Phone className="absolute left-7 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-500 group-focus-within:text-brand-lime transition-all" />
                   <input 
-                    placeholder="+91 MOBILE"
-                    className="glass-input w-full pl-20 text-xl tracking-tight"
+                    placeholder="MOBILE NUMBER"
+                    className="glass-input w-full px-8 text-xl tracking-tight"
                     value={formData.phone}
                     onChange={e => setFormData({...formData, phone: e.target.value})}
                   />
@@ -251,10 +250,9 @@ export function Auth({ onComplete }: AuthProps) {
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Communication Hub</Label>
                 <div className="relative group">
-                  <Mail className="absolute left-7 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-500 transition-all opacity-40" />
                   <input 
-                    placeholder="GMAIL (OPTIONAL)"
-                    className="glass-input w-full pl-20 text-xl tracking-tight"
+                    placeholder="EMAIL (OPTIONAL)"
+                    className="glass-input w-full px-8 text-xl tracking-tight"
                     value={formData.email}
                     onChange={e => setFormData({...formData, email: e.target.value})}
                   />
@@ -299,47 +297,52 @@ export function Auth({ onComplete }: AuthProps) {
               <div className="space-y-6">
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Chronos Age</Label>
-                  <input 
-                    type="number"
-                    placeholder="ENTER AGE"
-                    className="glass-input w-full text-2xl font-black tracking-tighter"
-                    value={formData.age}
-                    onChange={e => setFormData({...formData, age: Number(e.target.value)})}
-                  />
+                  <div className="relative group">
+                    <input 
+                      type="number"
+                      placeholder="ENTER AGE"
+                      className="glass-input w-full px-8 text-2xl font-black tracking-tighter"
+                      value={formData.age}
+                      onChange={e => setFormData({...formData, age: Number(e.target.value)})}
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Locale Hub</Label>
-                  <input 
-                    placeholder="E.G. NEW YORK, USA"
-                    className="glass-input w-full text-xl font-bold tracking-tight"
-                    value={formData.location}
-                    onChange={e => setFormData({...formData, location: e.target.value})}
-                  />
+                  <div className="relative group">
+                    <input 
+                      placeholder="E.G. NEW YORK, USA"
+                      className="glass-input w-full px-8 text-xl font-bold tracking-tight"
+                      value={formData.location}
+                      onChange={e => setFormData({...formData, location: e.target.value})}
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Academic Tier</Label>
-                  <select 
-                    className="glass-input w-full text-xl font-bold tracking-tight appearance-none bg-[#0a0a0b]"
-                    value={formData.qualification}
-                    onChange={e => setFormData({...formData, qualification: e.target.value})}
-                  >
-                    <option value="Secondary (10th)">Grade 10 Registry</option>
-                    <option value="Higher Secondary (12th)">Grade 12 Protocol</option>
-                    <option value="Undergraduate">University Tier</option>
-                    <option value="Postgraduate">Advanced Doctorate</option>
-                  </select>
+                  <div className="relative group">
+                    <select 
+                      className="glass-input w-full px-8 text-xl font-bold tracking-tight appearance-none bg-[#0a0a0b]"
+                      value={formData.qualification}
+                      onChange={e => setFormData({...formData, qualification: e.target.value})}
+                    >
+                      <option value="Secondary (10th)">Grade 10 Registry</option>
+                      <option value="Higher Secondary (12th)">Grade 12 Protocol</option>
+                      <option value="Undergraduate">University Tier</option>
+                      <option value="Postgraduate">Advanced Doctorate</option>
+                    </select>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Economic Index (Annual)</Label>
-                  <div className="relative">
-                    <IndianRupee className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-500" />
+                  <div className="relative group">
                     <input 
                       type="number"
                       placeholder="ESTIMATED REVENUE"
-                      className="glass-input w-full pl-16 text-2xl font-black tracking-tighter"
+                      className="glass-input w-full px-8 text-2xl font-black tracking-tighter"
                       value={formData.income}
                       onChange={e => setFormData({...formData, income: Number(e.target.value)})}
                     />
