@@ -87,5 +87,29 @@ export const geminiService = {
       console.error("Gemini Discovery Error:", error);
       return [];
     }
+  },
+
+  async chat(message: string, context: string): Promise<string> {
+    const prompt = `
+      Context Information:
+      ${context}
+      
+      User Message: ${message}
+      
+      You are Matrix AI, a futuristic assistant for a scholarship discovery platform.
+      Provide a helpful, concise response based on the context. Keep the futuristic "Matrix" personality.
+    `;
+
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt
+      });
+
+      return response.text || "Connection to the Matrix lost. Please try again.";
+    } catch (error) {
+      console.error("Gemini Chat Error:", error);
+      return "Critical system error in neural link.";
+    }
   }
 };

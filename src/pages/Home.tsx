@@ -11,15 +11,18 @@ import { motion } from 'motion/react';
 import { Search, Filter, Sparkles, MapPin, Calendar, IndianRupee, ArrowRight, Star, Fingerprint } from 'lucide-react';
 import { geminiService } from '../services/geminiService';
 import { toast } from 'sonner';
+import { useLanguage } from '../LanguageContext';
 
 interface HomeProps {
   user: User | null;
   profile: UserProfile | null;
+  scholarships: Scholarship[];
+  setScholarships: (s: Scholarship[]) => void;
   onSelect: (s: Scholarship) => void;
 }
 
-export function Home({ user, profile, onSelect }: HomeProps) {
-  const [scholarships, setScholarships] = useState<Scholarship[]>(MOCK_SCHOLARSHIPS);
+export function Home({ user, profile, scholarships, setScholarships, onSelect }: HomeProps) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [isDiscovering, setIsDiscovering] = useState(false);
   const [matchResults, setMatchResults] = useState<{ scholarshipId: string; matchScore: number; reason: string }[]>([]);
@@ -118,17 +121,16 @@ export function Home({ user, profile, onSelect }: HomeProps) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-300 backdrop-blur-xl">
             <Sparkles className="w-3 h-3 text-brand-lime" />
-            AI Precision Matching
+            {t('hero.tagline')}
           </div>
-          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter text-white font-display leading-[0.9] text-balance drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
-            Find your <br />
-            <span className="text-brand-lime drop-shadow-[0_0_15px_rgba(198,244,50,0.4)]">future</span>, funded.
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-white font-display leading-[0.9] text-balance drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] uppercase italic">
+             {t('hero.title').split(',')[0]}, <br />
+            <span className="text-brand-lime drop-shadow-[0_0_15px_rgba(198,244,50,0.4)]">{t('hero.title').split(',')[1]}</span>
           </h1>
-          <p className="text-xl text-slate-200 max-w-xl mx-auto font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-            Personalized discovery for government and private scholarships worldwide.
+          <p className="text-lg text-slate-200 max-w-xl mx-auto font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            {t('hero.description')}
           </p>
 
-          {/* Desktop Onboarding Trigger */}
           {!user && (
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
@@ -138,17 +140,14 @@ export function Home({ user, profile, onSelect }: HomeProps) {
             >
               <Button 
                 onClick={() => {
-                  // This will trigger the Auth page becausecurrentPage remains 'home'
-                  // but needsAuth is true and we'll signal to show it on desktop in App.tsx
-                  // Actually, I'll just use a window event as a simple global bridge
                   window.dispatchEvent(new CustomEvent('trigger-auth'));
                 }}
-                className="h-20 px-12 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-black rounded-3xl group transition-all"
+                className="h-16 px-10 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-black rounded-[1.5rem] group transition-all text-sm uppercase tracking-widest"
               >
-                <Fingerprint className="w-6 h-6 mr-3 text-brand-lime group-hover:scale-110 transition-all" />
-                INITIATE IDENTITY SYNC
+                <Fingerprint className="w-5 h-5 mr-3 text-brand-lime group-hover:scale-110 transition-all" />
+                {t('auth.initiate')}
               </Button>
-              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em]">Protocol inactive // Connect to proceed</p>
+              <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.3em]">Protocol inactive // Connect to proceed</p>
             </motion.div>
           )}
         </motion.div>
@@ -156,21 +155,21 @@ export function Home({ user, profile, onSelect }: HomeProps) {
         <div className="flex flex-col gap-6 mt-12 max-w-2xl mx-auto">
           <div className="relative group">
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-brand-lime/10 blur-[100px] opacity-0 group-focus-within:opacity-100 transition-opacity" />
-            <div className="relative flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-500" />
-                <Input 
-                  placeholder="What are you studying?" 
-                  className="pl-14 h-16 border-white/10 bg-white/[0.04] backdrop-blur-2xl text-white rounded-[1.8rem] focus-visible:ring-brand-lime focus-visible:bg-white/[0.08] transition-all text-lg"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <Button 
-                className="h-16 px-10 bg-brand-lime text-black hover:bg-brand-lime/90 gap-3 font-black rounded-[1.8rem] shadow-[0_15px_40px_-10px_rgba(198,244,50,0.3)] transition-all active:scale-95"
-                onClick={user ? handleDiscover : () => toast.error("Sign in to use AI discovery")}
-                disabled={isDiscovering}
-              >
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+              <input 
+                placeholder={t('search.placeholder')} 
+                className="w-full flex h-14 border border-white/10 bg-white/[0.04] backdrop-blur-2xl text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-lime px-12 focus:bg-white/[0.08] transition-all text-base"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Button 
+              className="h-14 px-8 bg-brand-lime text-black hover:bg-brand-lime/90 gap-3 font-black rounded-2xl shadow-lg transition-all active:scale-95 text-xs uppercase tracking-widest"
+              onClick={user ? handleDiscover : () => toast.error("Sign in to use AI discovery")}
+              disabled={isDiscovering}
+            >
                 {isDiscovering ? (
                   <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}>
                     <Sparkles className="w-6 h-6" />
@@ -178,7 +177,7 @@ export function Home({ user, profile, onSelect }: HomeProps) {
                 ) : (
                   <>
                     <Sparkles className="w-6 h-6" />
-                    AI DISCOVER
+                    {t('search.button')}
                   </>
                 )}
               </Button>
@@ -259,13 +258,13 @@ export function Home({ user, profile, onSelect }: HomeProps) {
         <section className="space-y-8">
           <div className="flex items-center justify-between px-2">
             <div className="space-y-1">
-              <h2 className="text-3xl font-black tracking-tight text-white font-display">PREMIUM MATCHES</h2>
-              <p className="text-sm text-slate-500 font-medium">Top 3 opportunities based on your digital profile.</p>
+              <h2 className="text-2xl font-black tracking-tight text-white font-display uppercase italic">{t('home.premiumMatches')}</h2>
+              <p className="text-xs text-slate-500 font-medium">{t('home.matchesSub')}</p>
             </div>
             <div className="relative group">
               <div className="absolute inset-0 bg-brand-lime/20 blur-lg rounded-full" />
-              <Badge variant="outline" className="relative text-brand-lime border-brand-lime/30 bg-brand-lime/10 px-6 py-2 rounded-full font-black text-xs tracking-widest">
-                AI MATCHED
+              <Badge variant="outline" className="relative text-brand-lime border-brand-lime/30 bg-brand-lime/10 px-4 py-1.5 rounded-full font-black text-[9px] tracking-widest">
+                {t('home.aiMatched')}
               </Badge>
             </div>
           </div>
@@ -311,14 +310,14 @@ export function Home({ user, profile, onSelect }: HomeProps) {
 
                       <div className="mt-10 flex items-end justify-between relative z-10">
                         <div className="space-y-1">
-                          <p className="text-[10px] text-brand-lime font-bold tracking-widest uppercase">Funding</p>
-                          <p className="text-2xl font-black text-white flex items-center gap-1 drop-shadow-md">
-                            <IndianRupee className="w-5 h-5 text-brand-lime" />
+                          <p className="text-[9px] text-brand-lime font-bold tracking-widest uppercase">{t('home.funding')}</p>
+                          <p className="text-xl font-black text-white flex items-center gap-1 drop-shadow-md">
+                            <IndianRupee className="w-4 h-4 text-brand-lime" />
                             {s.amount}
                           </p>
                         </div>
-                        <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-brand-lime group-hover:text-black shadow-inner transition-all duration-500 backdrop-blur-md hover:shadow-[0_0_20px_rgba(198,244,50,0.4)]">
-                          <ArrowRight className="w-7 h-7" />
+                        <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-brand-lime group-hover:text-black shadow-inner transition-all duration-500 backdrop-blur-md">
+                          <ArrowRight className="w-6 h-6" />
                         </div>
                       </div>
                     </div>
@@ -332,8 +331,8 @@ export function Home({ user, profile, onSelect }: HomeProps) {
       {/* Main Listing */}
       <section className="space-y-8 pt-10">
         <div className="flex items-center gap-4 px-2">
-          <div className="h-10 w-2 bg-brand-lime rounded-full" />
-          <h2 className="text-3xl font-black tracking-tighter text-white font-display">GLOBAL DIRECTORY</h2>
+          <div className="h-8 w-1.5 bg-brand-lime rounded-full" />
+          <h2 className="text-2xl font-black tracking-tighter text-white font-display uppercase italic">{t('home.globalDirectory')}</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -367,30 +366,30 @@ export function Home({ user, profile, onSelect }: HomeProps) {
                   {s.description}
                 </p>
                 
-                <div className="pt-8 mt-auto border-t border-white/5 space-y-5">
-                   <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-brand-lime transition-colors">
-                        <IndianRupee className="w-5 h-5 text-brand-lime group-hover:text-black" />
+                <div className="pt-6 mt-auto border-t border-white/5 space-y-4">
+                   <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-brand-lime transition-colors">
+                        <IndianRupee className="w-4 h-4 text-brand-lime group-hover:text-black" />
                       </div>
                       <div className="space-y-0.5">
-                        <p className="text-[9px] text-brand-lime/70 font-bold tracking-widest uppercase">Funding</p>
-                        <p className="text-lg font-black text-white drop-shadow-sm">{s.amount}</p>
+                        <p className="text-[8px] text-brand-lime/70 font-bold tracking-widest uppercase">{t('home.funding')}</p>
+                        <p className="text-base font-black text-white drop-shadow-sm">{s.amount}</p>
                       </div>
                    </div>
-                   <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center">
-                        <MapPin className="w-5 h-5 text-slate-400" />
+                   <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center">
+                        <MapPin className="w-4 h-4 text-slate-400" />
                       </div>
                       <div className="space-y-0.5">
-                        <p className="text-[9px] text-slate-500 font-bold tracking-widest uppercase">Location</p>
-                        <p className="text-sm font-bold text-slate-200">{s.location}</p>
+                        <p className="text-[8px] text-slate-500 font-bold tracking-widest uppercase">{t('home.location')}</p>
+                        <p className="text-xs font-bold text-slate-200">{s.location}</p>
                       </div>
                    </div>
                 </div>
               </div>
               
-              <Button variant="ghost" className="mt-10 w-full h-14 bg-white/5 text-white hover:bg-brand-lime hover:text-black rounded-2xl transition-all font-black text-sm tracking-widest shadow-2xl backdrop-blur-md">
-                VIEW DETAILS
+              <Button variant="ghost" className="mt-8 w-full h-12 bg-white/5 text-white hover:bg-brand-lime hover:text-black rounded-xl transition-all font-black text-xs tracking-widest shadow-xl backdrop-blur-md uppercase">
+                {t('home.viewDetails')}
               </Button>
             </motion.div>
           ))}
@@ -399,10 +398,9 @@ export function Home({ user, profile, onSelect }: HomeProps) {
         {filteredScholarships.length === 0 && (
           <div className="text-center py-24 glass-card border-dashed">
             <Search className="w-16 h-16 text-slate-700 mx-auto mb-6 opacity-30" />
-            <h3 className="text-2xl font-black text-white mb-2">NO SCHOLARSHIPS FOUND</h3>
+            <h3 className="text-2xl font-black text-white mb-2 uppercase">{t('home.noScholarships')}</h3>
             <p className="text-slate-500 font-medium max-w-sm mx-auto leading-relaxed">
-              We couldn't find matching opportunities. <br />
-              Try adjusting your query or use our AI matching engine.
+              {t('home.noScholarshipsSub')}
             </p>
           </div>
         )}

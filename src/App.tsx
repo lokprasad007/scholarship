@@ -9,15 +9,21 @@ import { Profile } from './pages/Profile';
 import { ScholarshipDetail } from './pages/ScholarshipDetail';
 import { Auth } from './pages/Auth';
 import { FloatingNavbar } from './components/FloatingNavbar';
+import { ChatBot } from './components/ChatBot';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Bell } from 'lucide-react';
 import { UserProfile, Scholarship, Application, Notification } from './types';
+import { MOCK_SCHOLARSHIPS } from './constants';
 import { Toaster, toast } from 'sonner';
 import { AnimatePresence, motion } from 'motion/react';
 
-export default function App() {
+import { LanguageProvider, useLanguage } from './LanguageContext';
+
+function AppContent() {
+  const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [scholarships, setScholarships] = useState<Scholarship[]>(MOCK_SCHOLARSHIPS);
   const [currentPage, setCurrentPage] = useState<'home' | 'dashboard' | 'profile' | 'detail'>('home');
   const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
   const [loading, setLoading] = useState(true);
@@ -137,6 +143,7 @@ export default function App() {
           transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
           className="w-16 h-16 border-b-2 border-brand-lime rounded-full shadow-[0_10px_20px_-5px_rgba(198,244,50,0.3)]"
         />
+        <p className="ml-4 font-black tracking-widest text-brand-lime animate-pulse">{t('common.loading')}</p>
       </div>
     );
   }
@@ -157,26 +164,26 @@ export default function App() {
 
   return (
     <div className="min-h-screen text-white font-sans relative bg-[#0a0a0b] overflow-x-hidden selection:bg-brand-lime selection:text-black">
-      {/* Background Decor */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
+      {/* Global Background Layer */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0a0b] via-transparent to-[#0a0a0b] z-10" />
+        <div className="absolute inset-0 bg-[#0a0a0b]/60 backdrop-blur-[2px] z-20" />
         <img 
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=2000" 
-          alt="Abstract 3D Background"
-          className="w-full h-full object-cover opacity-30 grayscale-[0.5]"
+          src="https://images.unsplash.com/photo-1504198453319-5ce911bafcde?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
+          alt="Atmospheric Nature Background"
+          className="w-full h-full object-cover opacity-30 grayscale-[0.2]"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0a0b] via-transparent to-[#0a0a0b]" />
         
-        {/* Animated Glow Blobs */}
-        <div className="absolute top-[10%] left-[15%] w-[400px] h-[400px] bg-indigo-500/10 blur-[150px] animate-pulse rounded-full" />
-        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-brand-lime/5 blur-[180px] animate-pulse rounded-full" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/5 blur-[200px] rounded-full" />
+        {/* Subtle Futuristic Glows */}
+        <div className="absolute top-[10%] left-[15%] w-[400px] h-[400px] bg-indigo-500/10 blur-[150px] animate-pulse rounded-full z-30" />
+        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-brand-lime/5 blur-[180px] animate-pulse rounded-full z-30" style={{ animationDelay: '2s' }} />
       </div>
 
       <Toaster position="top-right" theme="dark" closeButton />
 
       <main className="container mx-auto px-4 py-8 max-w-7xl pb-32">
-        <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait">
           {currentPage === 'home' && (
             <motion.div
               key="home"
@@ -187,6 +194,8 @@ export default function App() {
               <Home 
                 user={user} 
                 profile={profile} 
+                scholarships={scholarships}
+                setScholarships={setScholarships}
                 onSelect={(s) => {
                   setSelectedScholarship(s);
                   setCurrentPage('detail');
@@ -278,6 +287,54 @@ export default function App() {
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* Language Shifter Shifter - always visible */}
+      <LanguageSwitcher />
+
+      {/* AI Chat Bot */}
+      <ChatBot userProfile={profile} scholarships={scholarships} />
     </div>
+  );
+}
+
+function LanguageSwitcher() {
+  const { language, setLanguage } = useLanguage();
+  const languages: { code: any; label: string }[] = [
+    { code: 'en', label: 'EN' },
+    { code: 'hi', label: 'हिं' },
+    { code: 'kn', label: 'ಕನ್ನ' },
+    { code: 'te', label: 'తెలు' },
+    { code: 'ta', label: 'தமி' }
+  ];
+
+  return (
+    <div className="fixed top-6 right-6 z-[300] flex flex-col gap-2">
+      <div className="flex bg-black/40 backdrop-blur-3xl border border-white/10 rounded-2xl p-1.5 shadow-2xl">
+        {languages.map((lang) => (
+          <button
+            key={lang.code}
+            onClick={() => setLanguage(lang.code)}
+            className={`px-3 py-2 rounded-xl text-[10px] font-black transition-all duration-300 ${
+              language === lang.code 
+                ? 'bg-brand-lime text-black shadow-[0_0_15px_rgba(198,244,50,0.4)]' 
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            {lang.label}
+          </button>
+        ))}
+      </div>
+      <div className="text-[8px] font-black tracking-[0.2em] text-center text-slate-500 uppercase">
+        MATRIX SYNC
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }

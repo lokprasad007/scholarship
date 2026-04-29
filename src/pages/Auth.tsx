@@ -167,8 +167,7 @@ export function Auth({ onComplete }: AuthProps) {
                   animate={{ opacity: 1, y: 0 }}
                   className="text-6xl md:text-[7rem] font-black tracking-tighter text-white font-display leading-[0.85] uppercase italic"
                 >
-                  Beyond <br />
-                  <span className="text-brand-lime">Funding.</span>
+                  Beyond <br /><span className="text-brand-lime">Funding.</span>
                 </motion.h1>
                 <motion.p 
                   initial={{ opacity: 0 }}
@@ -176,7 +175,7 @@ export function Auth({ onComplete }: AuthProps) {
                   transition={{ delay: 0.3 }}
                   className="text-slate-500 font-bold uppercase tracking-[0.4em] text-[10px] md:text-xs max-w-sm"
                 >
-                  Secure your academic trajectory with our AI-enhanced registry and predictive funding models.
+                  Personalized discovery for government and private scholarships worldwide.
                 </motion.p>
               </div>
 
@@ -187,7 +186,7 @@ export function Auth({ onComplete }: AuthProps) {
                     disabled={isProcessing}
                     className="h-24 md:h-28 bg-brand-lime text-black font-black text-xl md:text-2xl rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(198,244,50,0.4)] transition-all w-full md:w-[26rem] uppercase tracking-widest border-b-8 border-black/20"
                   >
-                    {isProcessing ? "SYNCING..." : "IDENTITY SYNC"}
+                    {isProcessing ? "SYNCING..." : "INITIATE IDENTITY SYNC"}
                   </Button>
                 </motion.div>
                 <Button 
@@ -195,7 +194,7 @@ export function Auth({ onComplete }: AuthProps) {
                   onClick={handleBeginOnboarding}
                   className="h-20 md:h-24 text-white font-black text-lg md:text-xl rounded-[2.5rem] border-2 border-white/10 hover:bg-white/5 w-full md:w-[26rem] uppercase tracking-widest"
                 >
-                  GUEST PROTOCOL
+                  BEGIN BIOMETRIC ENTRY
                 </Button>
               </div>
               
@@ -212,47 +211,47 @@ export function Auth({ onComplete }: AuthProps) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: 'blur(20px)' }}
-            className="relative z-10 w-full max-w-2xl p-8 md:p-16 space-y-12 bg-white/[0.02] backdrop-blur-3xl border border-white/5 rounded-[3.5rem] shadow-2xl"
+            className="relative z-10 w-full max-w-2xl p-6 md:p-10 space-y-8 bg-white/[0.02] backdrop-blur-3xl border border-white/5 rounded-[3.5rem] shadow-2xl overflow-y-auto max-h-[90vh]"
           >
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-lime/10 border border-brand-lime/20 text-[10px] font-black text-brand-lime uppercase tracking-widest">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-lime/10 border border-brand-lime/20 text-[9px] font-black text-brand-lime uppercase tracking-widest">
                 <Fingerprint className="w-3 h-3" /> Step 01 / 02
               </div>
-              <h2 className="text-6xl md:text-7xl font-black tracking-tighter text-white font-display uppercase italic">IDENTITY</h2>
-              <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Primary bio-metric identification for the registry.</p>
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white font-display uppercase italic">IDENTITY</h2>
+              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Primary bio-metric identification for the registry.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2 md:col-span-2">
-                <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Full Legal Identity</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1.5 md:col-span-2">
+                <Label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-4">Full Legal Identity</Label>
                 <div className="relative group">
                   <input 
                     placeholder="ENTER NAME"
-                    className="glass-input w-full px-8 text-xl tracking-tight"
+                    className="glass-input w-full px-6 text-lg tracking-tight h-14"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Mobile String</Label>
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-4">Mobile String</Label>
                 <div className="relative group">
                   <input 
                     placeholder="MOBILE NUMBER"
-                    className="glass-input w-full px-8 text-xl tracking-tight"
+                    className="glass-input w-full px-6 text-lg tracking-tight h-14"
                     value={formData.phone}
                     onChange={e => setFormData({...formData, phone: e.target.value})}
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Communication Hub</Label>
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-4">Communication Hub</Label>
                 <div className="relative group">
                   <input 
                     placeholder="EMAIL (OPTIONAL)"
-                    className="glass-input w-full px-8 text-xl tracking-tight"
+                    className="glass-input w-full px-6 text-lg tracking-tight h-14"
                     value={formData.email}
                     onChange={e => setFormData({...formData, email: e.target.value})}
                   />
@@ -263,9 +262,9 @@ export function Auth({ onComplete }: AuthProps) {
             <Button 
               onClick={() => setStep('academic')}
               disabled={!formData.name || !formData.phone}
-              className="h-24 md:h-28 bg-white/5 border border-white/10 hover:bg-brand-lime hover:text-black hover:border-brand-lime text-white font-black rounded-[2.5rem] shadow-2xl active:scale-95 transition-all w-full text-xl md:text-2xl uppercase tracking-[0.2em]"
+              className="h-20 md:h-22 bg-white/5 border border-white/10 hover:bg-brand-lime hover:text-black hover:border-brand-lime text-white font-black rounded-[2rem] shadow-2xl active:scale-95 transition-all w-full text-lg md:text-xl uppercase tracking-[0.2em]"
             >
-              PROCEED TO MATRIX <ArrowRight className="ml-4 w-8 h-8" />
+              PROCEED TO MATRIX <ArrowRight className="ml-4 w-6 h-6" />
             </Button>
           </motion.div>
         )}
@@ -275,44 +274,44 @@ export function Auth({ onComplete }: AuthProps) {
             key="academic"
             initial={{ opacity: 0, scale: 0.9, x: 100 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
-            className="relative z-10 w-full max-w-4xl p-8 md:p-16 space-y-12 bg-[#0f0f10] border border-white/5 rounded-[3.5rem] shadow-2xl"
+            className="relative z-10 w-full max-w-3xl p-6 md:p-10 space-y-8 bg-[#0f0f10] border border-white/5 rounded-[3.5rem] shadow-2xl overflow-y-auto max-h-[90vh]"
           >
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-black text-indigo-400 uppercase tracking-widest">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div className="space-y-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[9px] font-black text-indigo-400 uppercase tracking-widest">
                   <Sparkles className="w-3 h-3" /> Final Sync
                 </div>
-                <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white font-display uppercase italic text-indigo-400">MATRIX</h2>
-                <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Calibrating funding eligibility parameters.</p>
+                <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white font-display uppercase italic text-indigo-400">MATRIX</h2>
+                <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Calibrating funding eligibility parameters.</p>
               </div>
               <button 
                 onClick={() => setStep('personal')} 
-                className="w-16 h-16 rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-90"
+                className="w-12 h-12 rounded-[1.2rem] bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-90"
               >
-                <ChevronLeft className="w-8 h-8" />
+                <ChevronLeft className="w-6 h-6" />
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Chronos Age</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-4">Chronos Age</Label>
                   <div className="relative group">
                     <input 
                       type="number"
                       placeholder="ENTER AGE"
-                      className="glass-input w-full px-8 text-2xl font-black tracking-tighter"
+                      className="glass-input w-full px-6 text-lg font-black tracking-tight h-14"
                       value={formData.age}
                       onChange={e => setFormData({...formData, age: Number(e.target.value)})}
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Locale Hub</Label>
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-4">Locale Hub</Label>
                   <div className="relative group">
                     <input 
                       placeholder="E.G. NEW YORK, USA"
-                      className="glass-input w-full px-8 text-xl font-bold tracking-tight"
+                      className="glass-input w-full px-6 text-lg font-bold tracking-tight h-14"
                       value={formData.location}
                       onChange={e => setFormData({...formData, location: e.target.value})}
                     />
@@ -320,12 +319,12 @@ export function Auth({ onComplete }: AuthProps) {
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Academic Tier</Label>
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-4">Academic Tier</Label>
                   <div className="relative group">
                     <select 
-                      className="glass-input w-full px-8 text-xl font-bold tracking-tight appearance-none bg-[#0a0a0b]"
+                      className="glass-input w-full px-6 text-lg font-bold tracking-tight appearance-none bg-[#0a0a0b] h-14"
                       value={formData.qualification}
                       onChange={e => setFormData({...formData, qualification: e.target.value})}
                     >
@@ -336,13 +335,13 @@ export function Auth({ onComplete }: AuthProps) {
                     </select>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Economic Index (Annual)</Label>
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-4">Economic Index (Annual)</Label>
                   <div className="relative group">
                     <input 
                       type="number"
                       placeholder="ESTIMATED REVENUE"
-                      className="glass-input w-full px-8 text-2xl font-black tracking-tighter"
+                      className="glass-input w-full px-6 text-lg font-black tracking-tight h-14"
                       value={formData.income}
                       onChange={e => setFormData({...formData, income: Number(e.target.value)})}
                     />
@@ -354,7 +353,7 @@ export function Auth({ onComplete }: AuthProps) {
             <Button 
               onClick={handleFinalize}
               disabled={isProcessing || !formData.age || !formData.location}
-              className="h-28 bg-brand-lime text-black font-black rounded-[3rem] shadow-[0_30px_70px_-10px_rgba(198,244,50,0.5)] active:scale-95 transition-all w-full text-2xl uppercase tracking-[0.3em] border-b-8 border-black/20"
+              className="h-20 md:h-24 bg-brand-lime text-black font-black rounded-[2.5rem] shadow-[0_20px_50px_-10px_rgba(198,244,50,0.4)] active:scale-95 transition-all w-full text-xl uppercase tracking-[0.2em] border-b-4 border-black/20"
             >
               {isProcessing ? "UPLOAD IN PROGRESS..." : "ESTABLISH VAULT CONNECTION"}
             </Button>

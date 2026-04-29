@@ -18,9 +18,11 @@ interface ProfileProps {
 }
 
 import { motion } from 'motion/react';
-import { IndianRupee, ShieldCheck, Sparkles } from 'lucide-react';
+import { IndianRupee, ShieldCheck, Sparkles, ChevronLeft } from 'lucide-react';
+import { useLanguage } from '../LanguageContext';
 
 export function Profile({ user, profile, onUpdate }: ProfileProps) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: profile?.name || user?.displayName || '',
     age: profile?.age || 18,
@@ -80,11 +82,11 @@ export function Profile({ user, profile, onUpdate }: ProfileProps) {
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-lime/10 blur-[120px] -mr-40 -mt-40" />
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-indigo-500/10 blur-[100px] -ml-20 -mb-20" />
         
-        <div className="bg-[#0f0f10] rounded-[1.95rem] p-8 md:p-12 relative z-10">
-          <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
+        <div className="bg-[#0f0f10] rounded-[1.95rem] p-6 md:p-10 relative z-10">
+          <div className="flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
             <div className="relative group">
               <div className="absolute inset-0 bg-brand-lime/20 blur-2xl rounded-full scale-0 group-hover:scale-125 transition-transform duration-500" />
-              <div className="w-32 h-32 md:w-44 md:h-44 rounded-full p-1 bg-gradient-to-tr from-brand-lime to-indigo-500 relative z-10">
+              <div className="w-28 h-28 md:w-36 md:h-36 rounded-full p-1 bg-gradient-to-tr from-brand-lime to-indigo-500 relative z-10">
                 <div className="w-full h-full rounded-full bg-[#0f0f10] p-1.5 overflow-hidden">
                   <img 
                     src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`} 
@@ -96,43 +98,43 @@ export function Profile({ user, profile, onUpdate }: ProfileProps) {
               </div>
             </div>
 
-            <div className="flex-1 space-y-6">
+            <div className="flex-1 space-y-4">
               <div className="space-y-1">
-                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white font-display">
+                <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-white font-display uppercase italic">
                   {profile.name || user.displayName || 'PULSE USER'}
                 </h1>
-                <p className="text-brand-lime font-bold tracking-widest text-[10px] md:text-xs">
+                <p className="text-brand-lime font-bold tracking-widest text-[9px] md:text-[10px]">
                   @{user.email?.split('@')[0].toUpperCase()}_VAULT
                 </p>
               </div>
 
-              <p className="text-slate-400 text-base md:text-lg font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
-                 Currently pursuing <span className="text-white font-bold">{profile.qualification}</span> in <span className="text-white font-bold">{profile.location}</span>. 
-                 Optimizing for high-yield scholarship opportunities and academic longevity.
+              <p className="text-slate-400 text-sm md:text-base font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
+                 {t('profile.pursuing')} <span className="text-white font-bold">{profile.qualification}</span> {t('profile.in')} <span className="text-white font-bold">{profile.location}</span>. 
+                 {t('profile.optimizing')}
               </p>
 
-              <div className="flex flex-wrap gap-4 md:gap-6 pt-4 justify-center md:justify-start">
-                <div className="text-center px-6 py-4 glass-panel rounded-3xl border-transparent hover:border-white/10 transition-all flex flex-col items-center">
-                  <p className="text-2xl font-black text-white">{profile.age}</p>
-                  <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest mt-1">Chronos Grade</p>
+              <div className="flex flex-wrap gap-3 md:gap-4 pt-2 justify-center md:justify-start">
+                <div className="text-center px-5 py-3 glass-panel rounded-2xl border-transparent hover:border-white/10 transition-all flex flex-col items-center">
+                  <p className="text-xl font-black text-white">{profile.age}</p>
+                  <p className="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1">{t('auth.age')}</p>
                 </div>
-                <div className="text-center px-6 py-4 glass-panel rounded-3xl border-transparent hover:border-white/10 transition-all flex flex-col items-center">
-                  <p className="text-2xl font-black text-white">ACTIVE</p>
-                  <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest mt-1">Security Sync</p>
+                <div className="text-center px-5 py-3 glass-panel rounded-2xl border-transparent hover:border-white/10 transition-all flex flex-col items-center">
+                  <p className="text-xl font-black text-white">ACTIVE</p>
+                  <p className="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1">Status</p>
                 </div>
-                <div className="text-center px-6 py-4 glass-panel rounded-3xl border-transparent hover:border-white/10 transition-all flex flex-col items-center">
-                  <p className="text-2xl font-black text-white">{profile.interests.length}</p>
-                  <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest mt-1">Interest Nodes</p>
+                <div className="text-center px-5 py-3 glass-panel rounded-2xl border-transparent hover:border-white/10 transition-all flex flex-col items-center">
+                  <p className="text-xl font-black text-white">{profile.interests.length}</p>
+                  <p className="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1">Traits</p>
                 </div>
               </div>
             </div>
 
             <Button 
                variant="ghost" 
-               className="md:self-start bg-white/5 border border-white/10 rounded-2xl h-12 px-6 font-bold hover:bg-white/10 text-white"
+               className="md:self-start bg-white/5 border border-white/10 rounded-xl h-10 px-5 text-xs font-black hover:bg-white/10 text-white tracking-widest"
                onClick={() => setIsEditing(!isEditing)}
             >
-              {isEditing ? 'CANCEL SYNC' : 'MODIFY DATA'}
+              {isEditing ? t('common.cancel') : t('common.edit')}
             </Button>
           </div>
         </div>
@@ -145,29 +147,29 @@ export function Profile({ user, profile, onUpdate }: ProfileProps) {
             <h2 className="text-2xl font-black tracking-tight text-white font-display uppercase">Biometric Matrix</h2>
           </div>
 
-          <div className="glass-card p-8 space-y-6">
-            <div className="grid grid-cols-2 gap-6">
+          <div className="glass-card p-6 space-y-6">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Full Identity</label>
-                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-[1.2rem] text-sm font-bold text-white shadow-inner">
+                <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{t('auth.name')}</label>
+                <div className="p-3 bg-white/[0.02] border border-white/5 rounded-[1rem] text-xs font-bold text-white shadow-inner">
                   {profile.name || 'ANONYMOUS'}
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Location Hub</label>
-                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-[1.2rem] text-sm font-bold text-white shadow-inner">
-                  {profile.location || 'GLOBAL SCAN'}
+                <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{t('auth.location')}</label>
+                <div className="p-3 bg-white/[0.02] border border-white/5 rounded-[1rem] text-xs font-bold text-white shadow-inner">
+                  {profile.location || 'GLOBAL'}
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Academic Tier</label>
-                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-[1.2rem] text-sm font-bold text-white shadow-inner truncate">
+                <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{t('auth.qualification')}</label>
+                <div className="p-3 bg-white/[0.02] border border-white/5 rounded-[1rem] text-xs font-bold text-white shadow-inner truncate">
                   {profile.qualification.split(' ')[0].toUpperCase()}
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Economic Grade</label>
-                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-[1.2rem] text-sm font-bold text-white shadow-inner flex items-center gap-1">
+                <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{t('auth.income')}</label>
+                <div className="p-3 bg-white/[0.02] border border-white/5 rounded-[1rem] text-xs font-bold text-white shadow-inner flex items-center gap-1">
                   <IndianRupee className="w-3 h-3" />
                   {profile.income}
                 </div>
@@ -175,8 +177,8 @@ export function Profile({ user, profile, onUpdate }: ProfileProps) {
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Digital Signature</label>
-              <div className="p-4 bg-white/[0.02] border border-white/5 rounded-[1.2rem] text-sm font-bold text-slate-500 truncate">
+              <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Vault ID</label>
+              <div className="p-3 bg-white/[0.02] border border-white/5 rounded-[1rem] text-xs font-bold text-slate-500 truncate">
                 {user.email}
               </div>
             </div>
@@ -194,48 +196,48 @@ export function Profile({ user, profile, onUpdate }: ProfileProps) {
                onSubmit={handleSubmit}
                initial={{ opacity: 0, x: 20 }}
                animate={{ opacity: 1, x: 0 }}
-               className="glass-card p-8 space-y-6"
+               className="glass-card p-6 space-y-4"
              >
-               <div className="space-y-4">
-                 <div className="space-y-2">
-                   <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Identity Name</Label>
+               <div className="space-y-3">
+                 <div className="space-y-1.5">
+                   <Label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">{t('auth.name')}</Label>
                    <Input 
-                     className="bg-white/[0.03] border-white/10 rounded-[1.2rem] h-14 text-white font-bold focus-visible:ring-brand-lime"
+                     className="bg-white/[0.03] border-white/10 rounded-xl h-12 text-sm text-white font-bold focus-visible:ring-brand-lime"
                      value={formData.name} 
                      onChange={(e) => setFormData({...formData, name: e.target.value})} 
                    />
                  </div>
                  
-                 <div className="grid grid-cols-2 gap-4">
-                   <div className="space-y-2">
-                     <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Location Hub</Label>
+                 <div className="grid grid-cols-2 gap-3">
+                   <div className="space-y-1.5">
+                     <Label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">{t('auth.location')}</Label>
                      <Input 
-                       className="bg-white/[0.03] border-white/10 rounded-[1.2rem] h-14 text-white font-bold focus-visible:ring-brand-lime"
+                       className="bg-white/[0.03] border-white/10 rounded-xl h-12 text-sm text-white font-bold focus-visible:ring-brand-lime"
                        value={formData.location} 
                        onChange={(e) => setFormData({...formData, location: e.target.value})} 
                      />
                    </div>
-                   <div className="space-y-2">
-                     <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Economic Mark</Label>
+                   <div className="space-y-1.5">
+                     <Label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">{t('auth.income')}</Label>
                      <Input 
                        type="number"
-                       className="bg-white/[0.03] border-white/10 rounded-[1.2rem] h-14 text-white font-bold focus-visible:ring-brand-lime"
+                       className="bg-white/[0.03] border-white/10 rounded-xl h-12 text-sm text-white font-bold focus-visible:ring-brand-lime"
                        value={formData.income} 
                        onChange={(e) => setFormData({...formData, income: Number(e.target.value)})} 
                      />
                    </div>
                  </div>
 
-                 <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Academic Tier</Label>
+                 <div className="space-y-1.5">
+                    <Label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">{t('auth.qualification')}</Label>
                     <Select 
                       value={formData.qualification} 
                       onValueChange={val => setFormData({...formData, qualification: val})}
                     >
-                      <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-[1.2rem] h-14 text-white font-bold">
+                      <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-xl h-12 text-sm text-white font-bold">
                         <SelectValue placeholder="Selection Required" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#171717]/95 backdrop-blur-2xl text-white border-white/10 rounded-2xl">
+                      <SelectContent className="bg-[#171717]/95 backdrop-blur-2xl text-white border-white/10 rounded-xl">
                         <SelectItem value="Secondary (10th)">Grade 10</SelectItem>
                         <SelectItem value="Higher Secondary (12th)">Grade 12</SelectItem>
                         <SelectItem value="Undergraduate">University</SelectItem>
@@ -248,9 +250,9 @@ export function Profile({ user, profile, onUpdate }: ProfileProps) {
                <Button 
                  type="submit"
                  disabled={isSaving}
-                 className="w-full h-16 bg-brand-lime text-black font-black rounded-[1.5rem] shadow-[0_15px_40px_-5px_rgba(198,244,50,0.3)] mt-4 active:scale-95 transition-all text-sm tracking-widest"
+                 className="w-full h-12 bg-brand-lime text-black font-black rounded-xl shadow-lg mt-2 active:scale-95 transition-all text-xs tracking-widest"
                >
-                 {isSaving ? "TRANSMITTING..." : "OVERWRITE REGISTRY"}
+                 {isSaving ? t('common.loading') : t('auth.finalize')}
                </Button>
              </motion.form>
            ) : (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { Home, LayoutDashboard, Sparkles, User, Bell, Fingerprint } from 'lucide-react';
+import { useLanguage } from '../LanguageContext';
 
 interface FloatingNavbarProps {
   activeTab: string;
@@ -11,6 +12,7 @@ interface FloatingNavbarProps {
 }
 
 export function FloatingNavbar({ activeTab, onTabChange, onShowNotifications, isAuthenticated, unreadCount }: FloatingNavbarProps) {
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -33,14 +35,14 @@ export function FloatingNavbar({ activeTab, onTabChange, onShowNotifications, is
   }, [scrollY, lastScrollY]);
 
   const tabs = isAuthenticated ? [
-    { id: 'home', icon: Home, label: 'Portal' },
-    { id: 'dashboard', icon: LayoutDashboard, label: 'Command' },
-    { id: 'ai-discovery', icon: Sparkles, label: 'AI Sync' },
-    { id: 'profile', icon: User, label: 'Bio' },
-    { id: 'notifications', icon: Bell, label: 'Feeds' },
+    { id: 'home', icon: Home, label: t('nav.portal') },
+    { id: 'dashboard', icon: LayoutDashboard, label: t('nav.command') },
+    { id: 'ai-discovery', icon: Sparkles, label: t('nav.aiSync') },
+    { id: 'profile', icon: User, label: t('nav.bio') },
+    { id: 'notifications', icon: Bell, label: t('nav.feeds') },
   ] : [
-    { id: 'home', icon: Home, label: 'Portal' },
-    { id: 'auth', icon: Fingerprint, label: 'Join' },
+    { id: 'home', icon: Home, label: t('nav.portal') },
+    { id: 'auth', icon: Fingerprint, label: t('nav.join') },
   ];
 
   return (
