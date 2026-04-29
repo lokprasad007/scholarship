@@ -1,0 +1,129 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile with demographic information for matching.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "age": { "type": "integer" },
+        "income": { "type": "number" },
+        "qualification": { "type": "string" },
+        "location": { "type": "string" },
+        "interests": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "email"]
+    },
+    "Scholarship": {
+      "title": "Scholarship",
+      "description": "Details of a scholarship opportunity.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "provider": { "type": "string" },
+        "providerType": { "type": "string", "enum": ["government", "private"] },
+        "description": { "type": "string" },
+        "amount": { "type": "string" },
+        "deadline": { "type": "string", "format": "date" },
+        "eligibility": { "type": "string" },
+        "minAge": { "type": "integer" },
+        "maxAge": { "type": "integer" },
+        "maxIncome": { "type": "number" },
+        "qualifications": { "type": "array", "items": { "type": "string" } },
+        "location": { "type": "string" },
+        "applicationUrl": { "type": "string" },
+        "category": { "type": "string" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "integer" }
+      },
+      "required": ["title", "provider", "providerType"]
+    },
+    "Application": {
+      "title": "Application",
+      "description": "A user's scholarship application status.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "scholarshipId": { "type": "string" },
+        "scholarshipTitle": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "submitted", "reviewed", "accepted", "rejected"] },
+        "appliedDate": { "type": "string", "format": "date-time" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "scholarshipId", "status"]
+    },
+    "Favorite": {
+      "title": "Favorite",
+      "description": "A user's bookmarked scholarship.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "scholarshipId": { "type": "string" },
+        "addedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "scholarshipId"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "A user's rating and feedback on a scholarship.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "scholarshipId": { "type": "string" },
+        "rating": { "type": "integer" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "scholarshipId", "rating"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "System notification for users.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles."
+    },
+    "/scholarships/{scholarshipId}": {
+      "schema": "Scholarship",
+      "description": "Scholarship listing."
+    },
+    "/applications/{applicationId}": {
+      "schema": "Application",
+      "description": "Application tracking."
+    },
+    "/favorites/{favoriteId}": {
+      "schema": "Favorite",
+      "description": "User favorites."
+    },
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Scholarship reviews."
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications."
+    }
+  }
+}
