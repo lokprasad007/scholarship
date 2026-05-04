@@ -104,7 +104,7 @@ export function Profile({ user, profile, onUpdate }: ProfileProps) {
                   {profile.name || user.displayName || 'PULSE USER'}
                 </h1>
                 <p className="text-brand-lime font-bold tracking-widest text-[9px] md:text-[10px]">
-                  @{user.email?.split('@')[0].toUpperCase()}_VAULT
+                  @{(user.email?.split('@')[0] || 'USER').toUpperCase()}_VAULT
                 </p>
               </div>
 
@@ -164,7 +164,7 @@ export function Profile({ user, profile, onUpdate }: ProfileProps) {
               <div className="space-y-1">
                 <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{t('auth.qualification')}</label>
                 <div className="p-3 bg-white/[0.02] border border-white/5 rounded-[1rem] text-xs font-bold text-white shadow-inner truncate">
-                  {profile.qualification.split(' ')[0].toUpperCase()}
+                  {(profile.qualification?.split(' ')[0] || 'QUAL').toUpperCase()}
                 </div>
               </div>
               <div className="space-y-1">

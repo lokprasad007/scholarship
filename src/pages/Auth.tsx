@@ -4,7 +4,11 @@ import { ArrowRight, Fingerprint, Sparkles, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { auth, db } from '../lib/firebase';
-import { signInAnonymously, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { 
+  signInAnonymously, 
+  GoogleAuthProvider, 
+  signInWithPopup 
+} from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { UserProfile } from '../types';
 import { toast } from 'sonner';
@@ -73,7 +77,6 @@ export function Auth({ onComplete }: AuthProps) {
           user = result.user;
         } catch (authError: any) {
           if (authError.code === 'auth/admin-restricted-operation') {
-             // Fallback for prototype if Anonymous Auth is disabled in console
              toast.info("Connecting via Guest Protocol (Local Only)");
              user = { uid: 'guest_' + Math.random().toString(36).substr(2, 9), isAnonymous: true } as any;
           } else {
@@ -96,8 +99,6 @@ export function Auth({ onComplete }: AuthProps) {
       };
 
       if (!user!.isAnonymous || user!.uid.startsWith('guest_')) {
-        // If it's a real guest from a failed auth, we might not be able to save to Firestore
-        // depending on rules. For prototype, we'll try to save but handle failure.
         try {
           await setDoc(doc(db, 'users', user!.uid), profile);
         } catch (dbError) {
@@ -119,6 +120,7 @@ export function Auth({ onComplete }: AuthProps) {
 
   return (
     <div className="fixed inset-0 z-[100] bg-[#0a0a0b] overflow-hidden flex flex-col md:flex-row items-center justify-center">
+      
       {/* Background Ambience */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[10%] right-[10%] w-[1000px] h-[1000px] bg-brand-lime/10 blur-[200px] -mr-96 -mt-96 animate-pulse" />

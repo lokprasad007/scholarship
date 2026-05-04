@@ -47,10 +47,22 @@ export function ChatBot({ userProfile, scholarships }: ChatBotProps) {
 
     try {
       // Use Gemini to process the query
-      // For this specific request, we want it to highlight scholarship features
-      const context = `User Profile: ${userProfile ? JSON.stringify(userProfile) : 'Guest'}. 
-Available Scholarships: ${JSON.stringify(scholarships.slice(0, 5))}.
-App Features: AI Matching, Global Directory, Profile Sync, Real-time Alerts, Multi-language Support.`;
+      // Provide more specific context about the user's location and recent scholarships
+      const context = `
+        System: You are Matrix AI. You have access to real-time scholarship data.
+        User Location: ${userProfile?.location || 'Unknown'} (Focus on this state/region if asked).
+        User Qualification: ${userProfile?.qualification || 'Not provided'}.
+        User Income: ${userProfile?.income || 'Not provided'}.
+        
+        Available Recent Scholarships (AI Discovered):
+        ${scholarships.slice(0, 10).map(s => `- ${s.title} (${s.provider}): ${s.amount}, Deadline: ${s.deadline}, Eligibility: ${s.eligibility}`).join('\n')}
+        
+        App Features: 
+        1. AI Deep Scanning (Automatically finds 2024-2025 schemes).
+        2. State-Specific Matching (Prioritizes government grants from user's locale).
+        3. Multi-language Support (EN, HI, KN, TE, TA).
+        4. Profile Vault (Secure identity storage).
+      `;
       
       const response = await geminiService.chat(input, context);
       

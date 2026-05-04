@@ -48,12 +48,21 @@ export const geminiService = {
   },
 
   async discoverNewScholarships(profile: UserProfile): Promise<Partial<Scholarship>[]> {
-    const prompt = `Find 5 currently active scholarships for a student with the following profile:
+    const prompt = `Find 10 the most recent and officially verified active scholarships for 2024-2025 with a focus on the user's specific state/region if applicable.
+      
+      User Profile:
       - Age: ${profile.age}
-      - Annual Family Income: $${profile.income}
+      - Annual Family Income (INR/USD): ${profile.income}
       - Qualification: ${profile.qualification}
-      - Location: ${profile.location}
-      Provide details including title, provider, amount, deadline, and eligibility. Determine if it's "government" or "private".`;
+      - Location (City/State/Country): ${profile.location}
+      - Interests: ${profile.interests.join(", ")}
+
+      CRITICAL: Return only scholarships that match this user's profile and are currently accepting applications. 
+      Priority 1: Government scholarships from the user's specific state or central government.
+      Priority 2: Private scholarships from NGOs, companies, or universities.
+      
+      Provide details including title, provider, amount, deadline, and eligibility. 
+      Determine if it's "government" or "private".`;
 
     try {
       const response = await ai.models.generateContent({
@@ -67,16 +76,17 @@ export const geminiService = {
             items: {
               type: Type.OBJECT,
               properties: {
-                title: { type: Type.STRING },
-                provider: { type: Type.STRING },
+                title: { type: Type.STRING, description: "Official scholarship name" },
+                provider: { type: Type.STRING, description: "Organization name" },
                 providerType: { type: Type.STRING, enum: ["government", "private"] },
-                amount: { type: Type.STRING },
-                deadline: { type: Type.STRING },
-                eligibility: { type: Type.STRING },
-                location: { type: Type.STRING },
-                category: { type: Type.STRING }
+                amount: { type: Type.STRING, description: "Funding amount or 'Full Tuition'" },
+                deadline: { type: Type.STRING, description: "Application deadline (e.g., Oct 2024)" },
+                eligibility: { type: Type.STRING, description: "Brief eligibility criteria" },
+                location: { type: Type.STRING, description: "Target region/state" },
+                category: { type: Type.STRING, description: "Field of study (e.g. Medical, Engineering)" },
+                description: { type: Type.STRING, description: "Short summary of benefits" }
               },
-              required: ["title", "provider", "providerType", "amount", "deadline"]
+              required: ["title", "provider", "providerType", "amount", "deadline", "eligibility"]
             }
           }
         }

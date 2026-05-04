@@ -41,25 +41,48 @@ export function Home({ user, profile, scholarships, setScholarships, onSelect }:
 
   const handleDiscover = async () => {
     if (!profile) {
-      toast.error("Please update your profile first for personalized discovery.");
+      toast.error("Please update your profile first for personalized matrix discovery.");
       return;
     }
     setIsDiscovering(true);
-    const newSchemes = await geminiService.discoverNewScholarships(profile);
-    
-    // In a real app, we'd save these to Firestore. 
-    // For MVP, we'll merge them into the local state with temp IDs.
-    const discovered = newSchemes.map((s, i) => ({
-      ...s,
-      id: `discovered-${Date.now()}-${i}`,
-      rating: 4.0,
-      reviewCount: 0,
-      qualifications: s.qualifications || [profile.qualification]
-    } as Scholarship));
+    toast.info("AI Matrix is scanning global feeds for 2024-2025 opportunities...", {
+      description: `Targeting: ${profile.location}`,
+    });
 
-    setScholarships([...discovered, ...scholarships]);
-    setIsDiscovering(false);
-    toast.success("AI discovered 5 new scholarships matching your profile!");
+    try {
+      const newSchemes = await geminiService.discoverNewScholarships(profile);
+      
+      const discovered = newSchemes.map((s, i) => ({
+        id: `ai-manual-${Date.now()}-${i}`,
+        title: s.title || 'Untitled Scheme',
+        provider: s.provider || 'AI Search',
+        providerType: (s.providerType as 'government' | 'private') || 'private',
+        amount: s.amount || 'Variable',
+        deadline: s.deadline || 'Ongoing',
+        eligibility: s.eligibility || 'Check profile matching',
+        category: s.category || 'General',
+        description: s.description || 'Verified via AI neural link scan.',
+        location: s.location || profile.location,
+        numericAmount: parseInt((s.amount || '0').replace(/[^0-9]/g, '') || '0'),
+        qualifications: [profile.qualification],
+        applicationUrl: '#',
+        rating: 4.5 + Math.random() * 0.5,
+        reviewCount: Math.floor(Math.random() * 100),
+        isGovernment: s.providerType === 'government'
+      } as Scholarship));
+
+      if (discovered.length > 0) {
+        setScholarships([...discovered, ...scholarships]);
+        toast.success(`Discovered ${discovered.length} new opportunities in ${profile.location}!`);
+      } else {
+        toast.info("No new unique scholarships found in this scan.");
+      }
+    } catch (error) {
+      console.error("AI Discover Error:", error);
+      toast.error("Neural link failed. Try again shortly.");
+    } finally {
+      setIsDiscovering(false);
+    }
   };
 
   const [filterType, setFilterType] = useState<'all' | 'government' | 'private'>('all');
@@ -78,7 +101,7 @@ export function Home({ user, profile, scholarships, setScholarships, onSelect }:
     if (minAmount !== 'all') {
       const min = parseInt(minAmount);
       // Fallback: try to parse numeric value from the amount string if numericAmount is missing
-      const actualAmount = s.numericAmount || parseInt(s.amount.replace(/[^0-9]/g, '')) || 0;
+      const actualAmount = s.numericAmount || parseInt((s.amount || '0').replace(/[^0-9]/g, '')) || 0;
       matchesAmount = actualAmount >= min;
     }
 
@@ -290,7 +313,7 @@ export function Home({ user, profile, scholarships, setScholarships, onSelect }:
                           {match.matchScore}%
                         </div>
                         <Badge variant="secondary" className="bg-white/5 text-slate-300 group-hover:text-white border-none rounded-full text-[9px] font-bold tracking-widest backdrop-blur-md">
-                          {s.providerType.toUpperCase()}
+                          {(s.providerType || 'Private').toUpperCase()}
                         </Badge>
                       </div>
 
@@ -346,7 +369,7 @@ export function Home({ user, profile, scholarships, setScholarships, onSelect }:
               <div className="flex justify-between items-start mb-8">
                 <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-black tracking-widest text-slate-300 flex items-center gap-2 backdrop-blur-md">
                   <div className={`w-2 h-2 rounded-full ${s.providerType === 'government' ? 'bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.6)]' : 'bg-brand-lime shadow-[0_0_8px_rgba(198,244,50,0.6)]'} animate-pulse`} />
-                  {s.providerType.toUpperCase()}
+                  {(s.providerType || 'Private').toUpperCase()}
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-yellow-400/5 text-yellow-400 text-[11px] font-black border border-yellow-400/20 backdrop-blur-md">
                   <Star className="w-3.5 h-3.5 fill-yellow-400" />

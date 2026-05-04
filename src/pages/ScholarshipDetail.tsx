@@ -120,7 +120,7 @@ export function ScholarshipDetail({ scholarship, user, onApply, onBack }: Schola
           <section className="space-y-4">
             <div className="flex flex-wrap gap-2">
               <Badge className={`${scholarship.providerType === 'government' ? 'bg-blue-500/10 text-blue-400' : 'bg-brand-lime/10 text-brand-lime'} border-none rounded-full px-4 py-1 font-bold`}>
-                {scholarship.providerType.toUpperCase()} SCHEME
+                {(scholarship.providerType || 'Private').toUpperCase()} SCHEME
               </Badge>
               <Badge variant="outline" className="px-3 py-1 bg-white/5 text-white border-white/10 rounded-full">{scholarship.category}</Badge>
             </div>

@@ -24,7 +24,69 @@ function AppContent() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [scholarships, setScholarships] = useState<Scholarship[]>(MOCK_SCHOLARSHIPS);
+  const [isAiSyncing, setIsAiSyncing] = useState(false);
   const [currentPage, setCurrentPage] = useState<'home' | 'dashboard' | 'profile' | 'detail'>('home');
+
+  const syncScholarshipsWithAi = async (currentProfile: UserProfile) => {
+    if (isAiSyncing) return;
+    
+    setIsAiSyncing(true);
+    toast.info("AI Matrix is scanning for recent 2024-2025 scholarships...", {
+      description: `Targeting: ${currentProfile.location}`,
+      duration: 5000
+    });
+
+    try {
+      const { geminiService } = await import('./services/geminiService');
+      const discovered = await geminiService.discoverNewScholarships(currentProfile);
+      
+      if (discovered && discovered.length > 0) {
+        const formatted: Scholarship[] = discovered.map((s, idx) => ({
+          id: `ai_${Date.now()}_${idx}`,
+          title: s.title || 'Untitled Opportunity',
+          provider: s.provider || 'AI Search Result',
+          providerType: (s.providerType as 'government' | 'private') || 'private',
+          amount: s.amount || 'Variable',
+          deadline: s.deadline || 'Consult Official Site',
+          eligibility: s.eligibility || 'Check requirements',
+          category: s.category || 'General',
+          description: s.description || 'Discovered via AI neural link',
+          location: s.location || currentProfile.location,
+          maxIncome: currentProfile.income,
+          qualifications: [currentProfile.qualification],
+          applicationUrl: '#',
+          numericAmount: parseInt((s.amount || '0').replace(/[^0-9]/g, '')),
+          isGovernment: s.providerType === 'government',
+          rating: 4.5,
+          reviewCount: 0
+        }));
+
+        setScholarships(prev => {
+          // Keep unique ones by title
+          const existingTitles = new Set(prev.map(p => p.title));
+          const netNew = formatted.filter(f => !existingTitles.has(f.title));
+          return [...netNew, ...prev].slice(0, 50); // Keep top 50
+        });
+        
+        toast.success(`Discovered ${formatted.length} new opportunities for your location!`);
+      }
+    } catch (error) {
+      console.error("AI Sync Error:", error);
+      toast.error("Deep Matrix Scan failed. Using local cache.");
+    } finally {
+      setIsAiSyncing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (profile && user) {
+      // Small delay to ensure UI is ready
+      const timer = setTimeout(() => {
+        syncScholarshipsWithAi(profile);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [profile?.location, user?.uid]);
   const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<Notification[]>([]);
